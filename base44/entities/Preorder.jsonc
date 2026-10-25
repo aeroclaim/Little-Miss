@@ -1,0 +1,59 @@
+{
+  "name": "Preorder",
+  "type": "object",
+  "properties": {
+    "preorder_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "store_id": {
+      "type": "string",
+      "description": "Optional - the store that placed the preorder"
+    },
+    "town": {
+      "type": "string",
+      "description": "Town of the preorder when no store is linked"
+    },
+    "general_quantity": {
+      "type": "integer",
+      "description": "Number of notepads requested without a specific serial number"
+    },
+    "items": {
+      "type": "array",
+      "description": "Specific serial numbers requested",
+      "items": {
+        "type": "object",
+        "properties": {
+          "serial_number": {
+            "type": "integer"
+          },
+          "quantity": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "serial_number",
+          "quantity"
+        ]
+      }
+    },
+    "total_units": {
+      "type": "integer"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "open",
+        "fulfilled",
+        "cancelled"
+      ],
+      "default": "open"
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "preorder_date"
+  ]
+}

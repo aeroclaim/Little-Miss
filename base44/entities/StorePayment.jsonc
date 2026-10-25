@@ -1,0 +1,40 @@
+{
+  "name": "StorePayment",
+  "type": "object",
+  "properties": {
+    "store_id": {
+      "type": "string"
+    },
+    "payment_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "amount": {
+      "type": "number",
+      "description": "Amount received in ILS"
+    },
+    "method": {
+      "type": "string",
+      "enum": [
+        "cash",
+        "check",
+        "bank_transfer",
+        "credit_card",
+        "other"
+      ],
+      "default": "bank_transfer"
+    },
+    "reference": {
+      "type": "string",
+      "description": "Check number / transfer reference"
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "store_id",
+    "payment_date",
+    "amount"
+  ]
+}

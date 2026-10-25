@@ -1,0 +1,56 @@
+{
+  "name": "StoreReturn",
+  "type": "object",
+  "properties": {
+    "store_id": {
+      "type": "string"
+    },
+    "return_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "items": {
+      "type": "array",
+      "description": "Serial numbers returned; faulty_quantity is the part of quantity that is faulty and does not go back to sellable stock",
+      "items": {
+        "type": "object",
+        "properties": {
+          "serial_number": {
+            "type": "integer"
+          },
+          "quantity": {
+            "type": "integer"
+          },
+          "faulty_quantity": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "serial_number",
+          "quantity"
+        ]
+      }
+    },
+    "total_units": {
+      "type": "integer"
+    },
+    "faulty_units": {
+      "type": "integer"
+    },
+    "credit_value": {
+      "type": "number",
+      "description": "Credit given to the store for this return, in ILS"
+    },
+    "reason": {
+      "type": "string"
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "store_id",
+    "return_date",
+    "items"
+  ]
+}

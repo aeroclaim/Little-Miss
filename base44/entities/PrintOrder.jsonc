@@ -1,0 +1,58 @@
+{
+  "name": "PrintOrder",
+  "type": "object",
+  "properties": {
+    "order_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date of the print order"
+    },
+    "provider": {
+      "type": "string",
+      "description": "Printing provider / print house"
+    },
+    "reference": {
+      "type": "string",
+      "description": "Order or invoice number from the provider"
+    },
+    "items": {
+      "type": "array",
+      "description": "Copies printed per serial number",
+      "items": {
+        "type": "object",
+        "properties": {
+          "serial_number": {
+            "type": "integer"
+          },
+          "quantity": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "serial_number",
+          "quantity"
+        ]
+      }
+    },
+    "total_copies": {
+      "type": "integer",
+      "description": "Sum of all printed copies"
+    },
+    "total_price": {
+      "type": "number",
+      "description": "Total price in ILS"
+    },
+    "price_per_unit": {
+      "type": "number",
+      "description": "Price per printed notepad in ILS"
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "order_date",
+    "provider",
+    "items"
+  ]
+}

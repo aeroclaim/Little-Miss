@@ -1,0 +1,46 @@
+{
+  "name": "Store",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Store name (Hebrew)"
+    },
+    "town": {
+      "type": "string",
+      "description": "Town / city (Hebrew)"
+    },
+    "address": {
+      "type": "string"
+    },
+    "contact_person": {
+      "type": "string"
+    },
+    "phone": {
+      "type": "string"
+    },
+    "email": {
+      "type": "string"
+    },
+    "payment_model": {
+      "type": "string",
+      "enum": [
+        "consignment",
+        "invoice"
+      ],
+      "default": "consignment",
+      "description": "consignment = store pays for what it sells; invoice = store is invoiced on every delivery"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "name",
+    "town"
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "name": "StoreSale",
+  "type": "object",
+  "properties": {
+    "store_id": {
+      "type": "string"
+    },
+    "sale_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "items": {
+      "type": "array",
+      "description": "Serial numbers and quantities the store reported as sold",
+      "items": {
+        "type": "object",
+        "properties": {
+          "serial_number": {
+            "type": "integer"
+          },
+          "quantity": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "serial_number",
+          "quantity"
+        ]
+      }
+    },
+    "total_units": {
+      "type": "integer"
+    },
+    "unit_price": {
+      "type": "number",
+      "description": "Price per notepad owed by the store, in ILS"
+    },
+    "total_value": {
+      "type": "number",
+      "description": "Amount owed by the store for this sale report, in ILS"
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "store_id",
+    "sale_date",
+    "items"
+  ]
+}

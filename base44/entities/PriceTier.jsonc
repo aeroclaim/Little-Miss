@@ -1,0 +1,22 @@
+{
+  "name": "PriceTier",
+  "type": "object",
+  "properties": {
+    "batch_size": {
+      "type": "integer",
+      "description": "Number of notepads in the batch (the tier applies from this quantity)"
+    },
+    "batch_price": {
+      "type": "number",
+      "description": "Price in ILS offered to a store for the whole batch"
+    },
+    "label": {
+      "type": "string",
+      "description": "Optional tier name"
+    }
+  },
+  "required": [
+    "batch_size",
+    "batch_price"
+  ]
+}

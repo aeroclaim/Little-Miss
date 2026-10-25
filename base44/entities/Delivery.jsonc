@@ -1,0 +1,77 @@
+{
+  "name": "Delivery",
+  "type": "object",
+  "properties": {
+    "store_id": {
+      "type": "string",
+      "description": "Id of the Store receiving the batch"
+    },
+    "delivery_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "payment_model": {
+      "type": "string",
+      "enum": [
+        "consignment",
+        "invoice"
+      ],
+      "default": "consignment",
+      "description": "Payment model of the store at the time of delivery"
+    },
+    "items": {
+      "type": "array",
+      "description": "Exact serial numbers and quantities delivered",
+      "items": {
+        "type": "object",
+        "properties": {
+          "serial_number": {
+            "type": "integer"
+          },
+          "quantity": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "serial_number",
+          "quantity"
+        ]
+      }
+    },
+    "total_units": {
+      "type": "integer"
+    },
+    "unit_price": {
+      "type": "number",
+      "description": "Price per notepad in ILS"
+    },
+    "price_source": {
+      "type": "string",
+      "enum": [
+        "tier",
+        "manual",
+        "none"
+      ]
+    },
+    "tier_batch_size": {
+      "type": "integer",
+      "description": "Batch size of the price tier that was applied"
+    },
+    "total_value": {
+      "type": "number",
+      "description": "Total value in ILS"
+    },
+    "reference": {
+      "type": "string",
+      "description": "Delivery note / invoice number"
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "store_id",
+    "delivery_date",
+    "items"
+  ]
+}

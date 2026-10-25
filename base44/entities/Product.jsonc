@@ -1,0 +1,28 @@
+{
+  "name": "Product",
+  "type": "object",
+  "properties": {
+    "serial_number": {
+      "type": "integer",
+      "description": "Unique serial number of this Little Miss variation (1-250 and growing)"
+    },
+    "name": {
+      "type": "string",
+      "description": "Variation name in Hebrew"
+    },
+    "name_en": {
+      "type": "string",
+      "description": "Optional English name"
+    },
+    "file_link": {
+      "type": "string",
+      "description": "Hyperlink to the actual product file"
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "serial_number"
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "name": "Collection",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Collection name in Hebrew, e.g. \u05d0\u05d5\u05db\u05dc"
+    },
+    "name_en": {
+      "type": "string",
+      "description": "Optional English name, e.g. Food"
+    },
+    "serial_from": {
+      "type": "integer",
+      "description": "First serial number of the collection (inclusive)"
+    },
+    "serial_to": {
+      "type": "integer",
+      "description": "Last serial number of the collection (inclusive)"
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "name",
+    "serial_from",
+    "serial_to"
+  ]
+}

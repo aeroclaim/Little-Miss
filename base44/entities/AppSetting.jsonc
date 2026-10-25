@@ -1,0 +1,17 @@
+{
+  "name": "AppSetting",
+  "type": "object",
+  "properties": {
+    "key": {
+      "type": "string",
+      "description": "Setting key, e.g. welcome_video_url"
+    },
+    "value": {
+      "type": "string",
+      "description": "Setting value"
+    }
+  },
+  "required": [
+    "key"
+  ]
+}

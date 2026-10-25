@@ -1,0 +1,119 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 252 38% 98%;
+    --foreground: 248 16% 15%;
+    --card: 0 0% 100%;
+    --card-foreground: 248 16% 15%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 248 16% 15%;
+    --primary: 248 16% 15%;
+    --primary-foreground: 252 38% 98%;
+    --secondary: 250 40% 95%;
+    --secondary-foreground: 248 16% 15%;
+    --muted: 250 30% 95.5%;
+    --muted-foreground: 248 9% 42%;
+    --accent: 250 45% 94%;
+    --accent-foreground: 248 16% 15%;
+    --destructive: 350 75% 50%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 250 24% 90%;
+    --input: 250 22% 86%;
+    --ring: 248 16% 30%;
+    --brand: 338 78% 58%;
+    --brand-foreground: 0 0% 100%;
+    --lavender: 234 50% 92%;
+    --chart-1: 338 78% 58%;
+    --chart-2: 234 50% 62%;
+    --chart-3: 160 45% 42%;
+    --chart-4: 38 85% 55%;
+    --chart-5: 270 50% 62%;
+    --radius: 0.75rem;
+    --font-heading: 'Frank Ruhl Libre', 'Heebo', ui-serif, Georgia, serif;
+    --font-body: 'Heebo', 'Segoe UI', Arial, sans-serif;
+    --font-display: 'Frank Ruhl Libre', 'Heebo', ui-serif, Georgia, serif;
+    --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    --sidebar-background: 250 22% 11%;
+    --sidebar-foreground: 250 18% 86%;
+    --sidebar-primary: 338 78% 58%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 250 16% 18%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 250 14% 20%;
+    --sidebar-ring: 338 78% 58%;
+  }
+
+  .dark {
+    --background: 0 0% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 0 0% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 0 0% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 0 0% 9%;
+    --secondary: 0 0% 14.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 0 0% 14.9%;
+    --muted-foreground: 0 0% 63.9%;
+    --accent: 0 0% 14.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 14.9%;
+    --input: 0 0% 14.9%;
+    --ring: 0 0% 83.1%;
+    --chart-1: 220 70% 50%;
+    --chart-2: 160 60% 45%;
+    --chart-3: 30 80% 55%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 340 75% 55%;
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--border)) transparent;
+  }
+
+  body {
+    @apply bg-background text-foreground font-body antialiased;
+  }
+
+  ::selection {
+    background: hsl(var(--brand) / 0.2);
+  }
+
+  /* Clean quantity inputs: no browser spinners */
+  input[type='number']::-webkit-inner-spin-button,
+  input[type='number']::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  input[type='number'] {
+    -moz-appearance: textfield;
+  }
+}
+
+@layer utilities {
+  .bg-wash {
+    background-color: hsl(var(--background));
+    background-image:
+      radial-gradient(900px 380px at 100% -8%, hsl(236 62% 93% / 0.9), transparent 62%),
+      radial-gradient(700px 320px at 0% 0%, hsl(338 90% 95% / 0.7), transparent 60%);
+    background-repeat: no-repeat;
+  }
+}
