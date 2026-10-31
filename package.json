@@ -10,7 +10,7 @@
     "lint:fix": "eslint . --fix",
     "typecheck": "tsc -p ./jsconfig.json",
     "preview": "vite preview",
-    "desktop:dev": "cross-env LITTLEMISS_DESKTOP=true concurrently -k \"vite --host 127.0.0.1\" \"wait-on http://127.0.0.1:5173 && cross-env LITTLEMISS_DESKTOP=true VITE_DEV_SERVER_URL=http://127.0.0.1:5173 electron .\"",
+    "desktop:dev": "cross-env LITTLEMISS_DESKTOP=true CHOKIDAR_USEPOLLING=true concurrently -k \"vite --host 127.0.0.1\" \"wait-on http://127.0.0.1:5173 && cross-env LITTLEMISS_DESKTOP=true VITE_DEV_SERVER_URL=http://127.0.0.1:5173 electron . --in-process-gpu --disable-gpu-sandbox --no-sandbox\"",
     "desktop:build": "cross-env LITTLEMISS_DESKTOP=true vite build",
     "desktop:package": "npm run desktop:build && electron-builder --win nsis"
   },
@@ -112,7 +112,7 @@
     "productName": "Little Miss",
     "directories": { "output": "release" },
     "files": ["dist/**/*", "electron/**/*", "package.json"],
-    "win": { "target": "nsis" },
+    "win": { "target": "nsis", "icon": "public/app-icon.ico" },
     "nsis": { "oneClick": false, "allowToChangeInstallationDirectory": true }
   }
 }

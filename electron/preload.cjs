@@ -10,4 +10,5 @@ contextBridge.exposeInMainWorld('littlemissDesktop', {
   remove: (table, id) => ipcRenderer.invoke('data:remove', table, id),
   saveFile: (file) => ipcRenderer.invoke('file:save', file),
   readFile: (fileRef) => ipcRenderer.invoke('file:read', fileRef),
+  readFilePath: (filePath) => ipcRenderer.invoke('file:read-path', filePath),
 });

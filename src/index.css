@@ -4,46 +4,46 @@
 
 @layer base {
   :root {
-    --background: 252 38% 98%;
-    --foreground: 248 16% 15%;
+    --background: 40 24% 97%;
+    --foreground: 240 8% 13%;
     --card: 0 0% 100%;
-    --card-foreground: 248 16% 15%;
+    --card-foreground: 240 8% 13%;
     --popover: 0 0% 100%;
-    --popover-foreground: 248 16% 15%;
-    --primary: 248 16% 15%;
-    --primary-foreground: 252 38% 98%;
-    --secondary: 250 40% 95%;
-    --secondary-foreground: 248 16% 15%;
-    --muted: 250 30% 95.5%;
-    --muted-foreground: 248 9% 42%;
-    --accent: 250 45% 94%;
-    --accent-foreground: 248 16% 15%;
+    --popover-foreground: 240 8% 13%;
+    --primary: 240 8% 13%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 40 18% 94%;
+    --secondary-foreground: 240 8% 18%;
+    --muted: 40 18% 95%;
+    --muted-foreground: 240 5% 43%;
+    --accent: 344 40% 95%;
+    --accent-foreground: 340 48% 32%;
     --destructive: 350 75% 50%;
     --destructive-foreground: 0 0% 100%;
-    --border: 250 24% 90%;
-    --input: 250 22% 86%;
-    --ring: 248 16% 30%;
-    --brand: 338 78% 58%;
+    --border: 40 12% 89%;
+    --input: 40 12% 84%;
+    --ring: 340 48% 48%;
+    --brand: 340 55% 48%;
     --brand-foreground: 0 0% 100%;
-    --lavender: 234 50% 92%;
-    --chart-1: 338 78% 58%;
-    --chart-2: 234 50% 62%;
-    --chart-3: 160 45% 42%;
-    --chart-4: 38 85% 55%;
-    --chart-5: 270 50% 62%;
-    --radius: 0.75rem;
-    --font-heading: 'Frank Ruhl Libre', 'Heebo', ui-serif, Georgia, serif;
+    --lavender: 340 40% 95%;
+    --chart-1: 340 55% 48%;
+    --chart-2: 222 44% 51%;
+    --chart-3: 160 38% 40%;
+    --chart-4: 38 75% 48%;
+    --chart-5: 270 35% 54%;
+    --radius: 0.625rem;
+    --font-heading: 'Heebo', 'Segoe UI', Arial, sans-serif;
     --font-body: 'Heebo', 'Segoe UI', Arial, sans-serif;
-    --font-display: 'Frank Ruhl Libre', 'Heebo', ui-serif, Georgia, serif;
+    --font-display: 'Heebo', 'Segoe UI', Arial, sans-serif;
     --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-    --sidebar-background: 250 22% 11%;
-    --sidebar-foreground: 250 18% 86%;
-    --sidebar-primary: 338 78% 58%;
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 240 5% 36%;
+    --sidebar-primary: 340 55% 48%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 250 16% 18%;
-    --sidebar-accent-foreground: 0 0% 100%;
-    --sidebar-border: 250 14% 20%;
-    --sidebar-ring: 338 78% 58%;
+    --sidebar-accent: 344 40% 95%;
+    --sidebar-accent-foreground: 340 48% 32%;
+    --sidebar-border: 40 12% 91%;
+    --sidebar-ring: 340 55% 48%;
   }
 
   .dark {
@@ -97,23 +97,10 @@
     background: hsl(var(--brand) / 0.2);
   }
 
-  /* Clean quantity inputs: no browser spinners */
-  input[type='number']::-webkit-inner-spin-button,
-  input[type='number']::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-  }
-  input[type='number'] {
-    -moz-appearance: textfield;
-  }
 }
 
 @layer utilities {
   .bg-wash {
     background-color: hsl(var(--background));
-    background-image:
-      radial-gradient(900px 380px at 100% -8%, hsl(236 62% 93% / 0.9), transparent 62%),
-      radial-gradient(700px 320px at 0% 0%, hsl(338 90% 95% / 0.7), transparent 60%);
-    background-repeat: no-repeat;
   }
 }

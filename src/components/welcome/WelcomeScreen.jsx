@@ -5,7 +5,6 @@ import { Image } from '@/components/ui/image';
 import { useSettings } from '@/hooks/useSettings';
 import { useLang } from '@/lib/lang';
 import { LOGO_URL } from '@/lib/brand';
-import { isDesktop } from '@/lib/runtime';
 
 const FALLBACK_MS = 2000; // how long the logo screen lasts when no video was uploaded
 const VIDEO_CAP_MS = 15000; // never wait longer than this for a video to end
@@ -48,11 +47,7 @@ export default function WelcomeScreen({ ready, error, onRetry, onFinish }) {
       <div className="absolute inset-0 bg-gradient-to-t from-sidebar/90 via-sidebar/10 to-sidebar/40" />
 
       <div className="relative z-10 flex flex-col items-center gap-5 px-6 text-center">
-        {isDesktop ? (
-          <span className="flex h-24 w-24 items-center justify-center rounded-3xl bg-card font-display text-3xl font-bold text-foreground shadow-lift">LM</span>
-        ) : (
-          <Image src={LOGO_URL} alt="Little Miss" fittingType="fit" className="h-24 w-24 rounded-3xl bg-card shadow-lift" />
-        )}
+        <Image src={LOGO_URL} alt="Little Miss" fittingType="fit" className="h-24 w-24 rounded-3xl bg-card shadow-lift" />
         <div>
           <h1 className="font-display text-4xl font-bold text-sidebar-accent-foreground sm:text-5xl">Little Miss</h1>
           <p className="mt-2 text-sm">{t('ניהול הפצה', 'Distribution manager')}</p>
