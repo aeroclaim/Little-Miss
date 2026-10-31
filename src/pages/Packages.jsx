@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import { CircleX, Download, Package, Plus, Printer, RefreshCw, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -9,7 +10,7 @@ import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { dataLayer } from '@/data/dataLayer';
 import { useAppData, QUERY_KEY } from '@/hooks/useAppData';
 import { useLang } from '@/lib/lang';
-import { generatePackageContents, packageBreakdown, townAssignments } from '@/lib/logic/packages';
+import { generatePackageContents, packageBreakdown, packageBreakdownGroups, townAssignments } from '@/lib/logic/packages';
 import { todayISO } from '@/lib/logic/format';
 import PageHeader from '@/components/shared/PageHeader';
 import Section from '@/components/shared/Section';
@@ -47,7 +48,22 @@ function downloadCsv(packages, t) {
   URL.revokeObjectURL(url);
 }
 
-function printablePackages(packages, mode, batch, t) {
+function PackageQuantityGroups({ items, t, compact = false }) {
+  const groups = packageBreakdownGroups(items);
+  if (!groups.length) return <span>—</span>;
+  return (
+    <div className={compact ? 'package-quantity-groups package-quantity-groups-compact' : 'package-quantity-groups'}>
+      {groups.map(({ quantity, serials }) => (
+        <div key={quantity} className="package-quantity-group">
+          <strong>{t('כמות לכל מספר', 'Copies each')}: {quantity}</strong>
+          <span className="package-quantity-serials">{serials.join(', ')}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function printablePackages(packages, mode, batch, t, printOutput = false) {
   const rows = Math.max(1, Number(batch?.label_rows) || 8);
   const columns = Math.max(1, Number(batch?.label_columns) || 3);
   const perSheet = rows * columns;
@@ -55,19 +71,25 @@ function printablePackages(packages, mode, batch, t) {
   for (let index = 0; index < packages.length; index += perSheet) pages.push(packages.slice(index, index + perSheet));
 
   return (
-    <div data-package-print className="package-print-root">
+    <div
+      {...(printOutput ? { 'data-package-print-output': '' } : {})}
+      className={`package-print-root ${printOutput ? 'package-print-output' : 'package-print-preview'}`}
+    >
       {mode === 'list' ? (
-        <div className="p-8">
+        <div className="package-list-print">
           <h1 className="mb-5 text-2xl font-bold">{t('רשימת חבילות', 'Package list')}</h1>
-          <table className="w-full border-collapse text-sm">
-            <thead><tr>{[t('מספר חבילה', 'Package number'), t('עיר', 'Town'), t('מספרים וכמויות', 'Serials and quantities'), t('סה״כ יחידות', 'Total units')].map((header) => <th key={header} className="border p-2 text-start">{header}</th>)}</tr></thead>
-            <tbody>{packages.map((pkg) => <tr key={pkg.id}>
-              <td className="border p-2 font-semibold">{pkg.package_number}</td>
-              <td className="border p-2">{pkg.town}</td>
-              <td className="border p-2">{packageBreakdown(pkg.items)}</td>
-              <td className="border p-2 text-center">{pkg.total_units}</td>
-            </tr>)}</tbody>
-          </table>
+          <div className="package-list-cards">
+            {packages.map((pkg) => (
+              <article key={pkg.id} className="package-list-card">
+                <header className="package-list-card-header">
+                  <h2>{t('חבילה', 'Package')} #{pkg.package_number}</h2>
+                  <span>{pkg.town}</span>
+                  <b>{t('סה״כ יחידות', 'Total units')}: {pkg.total_units}</b>
+                </header>
+                <PackageQuantityGroups items={pkg.items} t={t} />
+              </article>
+            ))}
+          </div>
         </div>
       ) : (
         <div>
@@ -83,7 +105,7 @@ function printablePackages(packages, mode, batch, t) {
                   <p className="package-label-number">{t('חבילה', 'Package')} #{pkg.package_number}</p>
                   <p className="package-label-town">{pkg.town}</p>
                   <p><b>{t('סה״כ', 'Total')}:</b> {pkg.total_units}</p>
-                  <p className="package-label-breakdown">{packageBreakdown(pkg.items)}</p>
+                  <PackageQuantityGroups items={pkg.items} t={t} compact />
                 </article>
               ))}
             </div>
@@ -439,6 +461,10 @@ export default function Packages() {
           {activeBatch && printablePackages(selectedExportPackages, printMode, { ...activeBatch, label_rows: labelRows, label_columns: labelColumns }, t)}
         </DialogContent>
       </Dialog>
+      {printMode && activeBatch && createPortal(
+        printablePackages(selectedExportPackages, printMode, { ...activeBatch, label_rows: labelRows, label_columns: labelColumns }, t, true),
+        document.body
+      )}
       {deleteTarget && (
         <ConfirmDialog
           title={t(`למחוק את חבילה ${deleteTarget.package_number}?`, `Delete package ${deleteTarget.package_number}?`)}
@@ -473,18 +499,36 @@ export default function Packages() {
         />
       )}
       <style>{`
+        .package-print-root { background: white; color: black; }
+        .package-print-preview { width: 210mm; min-height: 297mm; margin: auto; box-shadow: 0 1px 8px #0002; }
+        .package-list-print { box-sizing: border-box; width: 210mm; min-height: 297mm; padding: 12mm; }
+        .package-list-cards { display: grid; gap: 5mm; }
+        .package-list-card { break-inside: avoid; page-break-inside: avoid; border: 1px solid #999; border-radius: 2mm; padding: 4mm; }
+        .package-list-card-header { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2mm 7mm; border-bottom: 1px solid #bbb; padding-bottom: 2mm; }
+        .package-list-card-header h2 { margin: 0; font-size: 14pt; }
+        .package-list-card-header span { font-weight: 700; }
+        .package-list-card-header b { margin-inline-start: auto; }
+        .package-quantity-groups { display: grid; gap: 2mm; padding-top: 3mm; }
+        .package-quantity-group { display: grid; grid-template-columns: minmax(30mm, auto) 1fr; gap: 2mm 4mm; align-items: start; border: 1px solid #ddd; border-radius: 1mm; padding: 2mm; }
+        .package-quantity-serials { overflow-wrap: anywhere; }
         .package-label-sheet { box-sizing: border-box; display: grid; width: 210mm; height: 297mm; padding: 8mm; page-break-after: always; break-after: page; }
-        .package-label { box-sizing: border-box; overflow: hidden; border: 1px dashed #aaa; padding: 3mm; font-size: 9pt; }
-        .package-label-number { font-weight: 700; font-size: 12pt; }
-        .package-label-town { font-weight: 700; font-size: 11pt; }
-        .package-label-breakdown { display: -webkit-box; overflow: hidden; -webkit-box-orient: vertical; -webkit-line-clamp: 5; overflow-wrap: anywhere; }
+        .package-label-sheet:last-child { page-break-after: auto; break-after: auto; }
+        .package-label { box-sizing: border-box; overflow: hidden; border: 1px dashed #777; padding: 3mm; font-size: 9pt; }
+        .package-label-number { margin: 0 0 1mm; font-weight: 700; font-size: 12pt; }
+        .package-label-town { margin: 0 0 1mm; font-weight: 700; font-size: 11pt; }
+        .package-quantity-groups-compact { gap: 1mm; padding-top: 1mm; font-size: 7pt; }
+        .package-quantity-groups-compact .package-quantity-group { display: block; border: 0; border-top: 1px solid #ddd; border-radius: 0; padding: 1mm 0 0; }
+        .package-quantity-groups-compact .package-quantity-serials { display: block; line-height: 1.2; }
         @media print {
           @page { size: A4; margin: 0; }
           body * { visibility: hidden !important; }
-          [data-package-print], [data-package-print] * { visibility: visible !important; }
-          [data-package-print] { position: fixed !important; inset: 0 !important; z-index: 99999 !important; overflow: visible !important; background: white !important; color: black !important; }
-          .package-label-sheet { page-break-after: always; break-after: page; }
-          button { display: none !important; }
+          #root { display: none !important; }
+          body > [data-package-print-output],
+          body > [data-package-print-output] * { visibility: visible !important; }
+          body > [data-package-print-output] { display: block !important; position: static !important; width: 210mm !important; margin: 0 !important; overflow: visible !important; background: white !important; color: black !important; box-shadow: none !important; }
+          .package-list-print { width: 210mm; min-height: 297mm; }
+          .package-label-sheet { width: 210mm; height: 297mm; }
+          .package-print-preview { display: none !important; }
         }
       `}</style>
     </>

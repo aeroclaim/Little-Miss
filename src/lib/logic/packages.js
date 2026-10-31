@@ -103,14 +103,20 @@ export function generatePackageContents({ packages, recipes, catalog, stock, exi
 }
 
 export function packageBreakdown(items) {
+  return packageBreakdownGroups(items)
+    .map(({ quantity, serials }) => `${serials.join(', ')} × ${quantity}`)
+    .join(' · ');
+}
+
+export function packageBreakdownGroups(items) {
   const groups = new Map();
   for (const item of items || []) {
     const quantity = Number(item.quantity) || 0;
+    if (quantity <= 0) continue;
     if (!groups.has(quantity)) groups.set(quantity, []);
     groups.get(quantity).push(Number(item.serial_number));
   }
   return [...groups]
     .sort(([a], [b]) => b - a)
-    .map(([quantity, serials]) => `${serials.sort((a, b) => a - b).join(', ')} × ${quantity}`)
-    .join(' · ');
+    .map(([quantity, serials]) => ({ quantity, serials: serials.sort((a, b) => a - b) }));
 }

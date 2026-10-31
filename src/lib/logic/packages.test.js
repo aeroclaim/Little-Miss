@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { generatePackageContents, townAssignments } from './packages.js';
+import { generatePackageContents, packageBreakdownGroups, townAssignments } from './packages.js';
 
 const catalog = [
   { serial: 1, product: {} },
@@ -12,6 +12,19 @@ test('town assignments are resolved independent of letter case and surrounding s
   assert.deepEqual(townAssignments('  Haifa ', [
     { name: 'haifa', assigned_serials: ['1', 2, 0, 'bad'] },
   ]), [1, 2]);
+});
+
+test('package breakdown keeps each quantity grouped with its serial numbers', () => {
+  assert.deepEqual(packageBreakdownGroups([
+    { serial_number: 9, quantity: 1 },
+    { serial_number: 2, quantity: 5 },
+    { serial_number: 4, quantity: 1 },
+    { serial_number: 3, quantity: 5 },
+    { serial_number: 8, quantity: 0 },
+  ]), [
+    { quantity: 5, serials: [2, 3] },
+    { quantity: 1, serials: [4, 9] },
+  ]);
 });
 
 test('assigned variations with enough printed stock can be packaged', () => {
