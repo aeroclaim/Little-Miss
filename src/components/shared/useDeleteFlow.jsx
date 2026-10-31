@@ -7,7 +7,7 @@ import ViolationAlert from '@/components/shared/ViolationAlert';
 // Confirm-then-delete flow shared by every list.
 //   run(id)  -> { ok, violations?, message? }
 //   const { ask, dialog } = useDeleteFlow({ run, title: (record) => '...' });   ...   {dialog}
-export default function useDeleteFlow({ run, title, text }) {
+export default function useDeleteFlow({ run, title, text, onDeleted }) {
   const { t } = useLang();
   const [target, setTarget] = useState(null);
   const [busy, setBusy] = useState(false);
@@ -20,6 +20,7 @@ export default function useDeleteFlow({ run, title, text }) {
     if (res.ok) {
       toast({ title: t('נמחק בהצלחה', 'Deleted') });
       setTarget(null);
+      onDeleted?.(target);
     } else {
       setFailure(res);
     }

@@ -3,17 +3,17 @@ import { num } from './format';
 
 export const ZERO_STOCK = Object.freeze({
   printed: 0, delivered: 0, returned: 0, faulty: 0, sold: 0, preordered: 0,
-  returnedOk: 0, available: 0, inMarket: 0, inStores: 0,
+  returnedOk: 0, reserved: 0, physicalAvailable: 0, available: 0, inMarket: 0, inStores: 0,
 });
 
 // Per serial number:
 //   available = printed - delivered + returned (non faulty)   -> sellable stock in the warehouse
 //   inMarket  = delivered - returned                          -> copies out in stores' towns (used for rarity)
 //   inStores  = delivered - returned - reported sold          -> copies physically still on store shelves
-export function computeStock({ printOrders = [], deliveries = [], returns = [], sales = [], preorders = [] }) {
+export function computeStock({ printOrders = [], deliveries = [], returns = [], sales = [], preorders = [], packages = [] }) {
   const rows = {};
   const row = (serial) => {
-    if (!rows[serial]) rows[serial] = { printed: 0, delivered: 0, returned: 0, faulty: 0, sold: 0, preordered: 0 };
+    if (!rows[serial]) rows[serial] = { printed: 0, delivered: 0, returned: 0, faulty: 0, sold: 0, preordered: 0, reserved: 0 };
     return rows[serial];
   };
   for (const o of printOrders) for (const it of o.items || []) row(it.serial_number).printed += num(it.quantity);
@@ -29,9 +29,13 @@ export function computeStock({ printOrders = [], deliveries = [], returns = [], 
   for (const p of preorders) {
     if (p.status === 'open') for (const it of p.items || []) row(it.serial_number).preordered += num(it.quantity);
   }
+  for (const pkg of packages) {
+    if (pkg.status === 'ready') for (const it of pkg.items || []) row(it.serial_number).reserved += num(it.quantity);
+  }
   for (const x of Object.values(rows)) {
     x.returnedOk = x.returned - x.faulty;
-    x.available = x.printed - x.delivered + x.returnedOk;
+    x.physicalAvailable = x.printed - x.delivered + x.returnedOk;
+    x.available = x.physicalAvailable - x.reserved;
     x.inMarket = x.delivered - x.returned;
     x.inStores = x.delivered - x.returned - x.sold;
   }

@@ -8,9 +8,11 @@ import ViolationAlert from '@/components/shared/ViolationAlert';
 import { useActions } from '@/hooks/useActions';
 import { useLang } from '@/lib/lang';
 import { ISRAELI_TOWNS } from '@/lib/logic/towns';
+import { useAppData } from '@/hooks/useAppData';
 
 export default function StoreForm({ store, onClose }) {
   const { t } = useLang();
+  const { data } = useAppData();
   const { save } = useActions();
   const [v, setV] = useState({
     name: store?.name || '', town: store?.town || '', address: store?.address || '',
@@ -39,7 +41,7 @@ export default function StoreForm({ store, onClose }) {
         <Field label={t('שם החנות', 'Store name')}><Input value={v.name} onChange={set('name')} /></Field>
         <Field label={t('עיר', 'Town')}>
           <Input list="towns-list" value={v.town} onChange={set('town')} />
-          <datalist id="towns-list">{ISRAELI_TOWNS.map((x) => <option key={x} value={x} />)}</datalist>
+          <datalist id="towns-list">{[...new Set([...ISRAELI_TOWNS, ...(data.towns || []).map((town) => town.name)])].map((x) => <option key={x} value={x} />)}</datalist>
         </Field>
         <Field label={t('כתובת', 'Address')}><Input value={v.address} onChange={set('address')} /></Field>
         <Field label={t('איש קשר', 'Contact')}><Input value={v.contact_person} onChange={set('contact_person')} /></Field>
@@ -48,7 +50,7 @@ export default function StoreForm({ store, onClose }) {
           <Select value={v.payment_model} onValueChange={(x) => setV({ ...v, payment_model: x })}>
             <SelectTrigger><SelectValue /></SelectTrigger>
             <SelectContent>
-              <SelectItem value="consignment">{t('קונסיגנציה', 'Consignment')}</SelectItem>
+              <SelectItem value="consignment">{t('תשלום לפי מכירה', 'Consignment')}</SelectItem>
               <SelectItem value="invoice">{t('חשבונית באספקה', 'Invoice on delivery')}</SelectItem>
             </SelectContent>
           </Select>

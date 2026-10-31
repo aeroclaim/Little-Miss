@@ -18,6 +18,16 @@
       "type": "string",
       "description": "Hyperlink to the actual product file"
     },
+    "distribution_paused": {
+      "type": "boolean",
+      "default": false,
+      "description": "Exclude from automatic package selection and warn on manual distribution"
+    },
+    "not_for_sale": {
+      "type": "boolean",
+      "default": false,
+      "description": "Prevent adding this item to packages and new store deliveries"
+    },
     "notes": {
       "type": "string"
     }

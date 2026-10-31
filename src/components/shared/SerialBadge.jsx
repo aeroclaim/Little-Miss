@@ -10,9 +10,9 @@ const SIZES = {
 };
 
 // The serial number as a small coloured pill. The colour comes from its collection.
-export default function SerialBadge({ serial, size = 'md', className }) {
+export default function SerialBadge({ serial, size = 'md', className, tone: customTone }) {
   const app = useAppData();
-  const tone = app?.model?.toneBySerial?.[serial] || NEUTRAL_TONE;
+  const tone = customTone || app?.model?.toneBySerial?.[serial] || NEUTRAL_TONE;
   return (
     <span
       dir="ltr"

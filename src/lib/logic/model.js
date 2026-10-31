@@ -28,12 +28,13 @@ export function buildModel(data) {
   const marketCounts = {};
   for (const [serial, r] of Object.entries(stock)) marketCounts[serial] = r.inMarket;
 
-  const towns = computeTownStats({ stores: data.stores, storeStats, finance }).map((t) => {
+  const towns = computeTownStats({ stores: data.stores, towns: data.towns, storeStats, finance }).map((t) => {
     const covered = printedSerials.filter((s) => (t.market[s] || 0) > 0).length;
     return { ...t, id: t.town, coverage: printedSerials.length ? covered / printedSerials.length : 0, coveredCount: covered };
   });
   const rarity = { overall: rarityTable(marketCounts, printedSerials), byTown: {} };
   for (const t of towns) rarity.byTown[t.town] = rarityTable(t.market, printedSerials);
+  const townByName = Object.fromEntries((data.towns || []).map((town) => [town.name, town]));
 
   const openPreorderUnits = {};
   for (const p of data.preorders || []) {
@@ -53,8 +54,9 @@ export function buildModel(data) {
     entryBySerial,
     printedSerials,
     towns,
+    townByName,
     rarity,
     openPreorderUnits,
-    totals: computeTotals({ stock, finance, printOrders: data.printOrders }),
+    totals: computeTotals({ stock, finance, printOrders: data.printOrders, expenses: data.expenses }),
   };
 }

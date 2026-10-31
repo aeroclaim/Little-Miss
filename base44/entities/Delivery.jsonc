@@ -65,6 +65,27 @@
       "type": "string",
       "description": "Delivery note / invoice number"
     },
+    "package_id": {
+      "type": "string",
+      "description": "Package assigned through the package distribution workflow"
+    },
+    "package_ids": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "All packages included in one combined delivery"
+    },
+    "manual_items": {
+      "type": "array",
+      "description": "Additional items manually included alongside selected packages",
+      "items": {
+        "type": "object",
+        "properties": {
+          "serial_number": { "type": "integer" },
+          "quantity": { "type": "integer" }
+        },
+        "required": ["serial_number", "quantity"]
+      }
+    },
     "notes": {
       "type": "string"
     }

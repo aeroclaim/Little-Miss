@@ -4,8 +4,18 @@ import { num, round2 } from './format';
 export const UNKNOWN_TOWN = '—';
 export const townOf = (store) => (store && String(store.town || '').trim()) || UNKNOWN_TOWN;
 
-export function computeTownStats({ stores = [], storeStats = {}, finance = {} }) {
+export function computeTownStats({ stores = [], towns: savedTowns = [], storeStats = {}, finance = {} }) {
   const towns = {};
+  for (const town of savedTowns) {
+    const name = String(town.name || '').trim();
+    if (name && !towns[name]) {
+      towns[name] = {
+        town: name, storeIds: [], storeCount: 0,
+        delivered: 0, returned: 0, faulty: 0, sold: 0, inStore: 0, deliveryCount: 0, returnCount: 0,
+        charges: 0, credits: 0, paid: 0, balance: 0, market: {},
+      };
+    }
+  }
   for (const store of stores) {
     const name = townOf(store);
     if (!towns[name]) {
@@ -115,7 +125,7 @@ export function analyzeDemand({ preorders = [], storeById = {}, stock = {}, open
   return { byTown: Object.values(byTown), bySerial: serialRows, totals };
 }
 
-export function computeTotals({ stock = {}, finance = {}, printOrders = [] }) {
+export function computeTotals({ stock = {}, finance = {}, printOrders = [], expenses = [] }) {
   const t = { printed: 0, delivered: 0, returned: 0, faulty: 0, sold: 0, available: 0, inStores: 0, inMarket: 0 };
   for (const r of Object.values(stock)) {
     t.printed += r.printed;
@@ -128,6 +138,8 @@ export function computeTotals({ stock = {}, finance = {}, printOrders = [] }) {
     t.inMarket += r.inMarket;
   }
   t.printCost = round2(printOrders.reduce((s, o) => s + num(o.total_price), 0));
+  t.miscExpense = round2(expenses.reduce((sum, expense) => sum + num(expense.amount), 0));
+  t.totalExpenses = round2(t.printCost + t.miscExpense);
   t.charged = 0;
   t.credits = 0;
   t.paid = 0;
@@ -143,5 +155,6 @@ export function computeTotals({ stock = {}, finance = {}, printOrders = [] }) {
   t.paid = round2(t.paid);
   t.receivable = round2(t.receivable);
   t.returnRate = t.delivered > 0 ? t.returned / t.delivered : 0;
+  t.afterTrackedExpenses = round2(t.charged - t.totalExpenses);
   return t;
 }

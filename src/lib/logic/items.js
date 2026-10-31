@@ -17,6 +17,10 @@ export function mapToItems(map) {
     .sort((a, b) => a.serial_number - b.serial_number);
 }
 
+export function combineItemLists(...lists) {
+  return mapToItems(itemsToMap(lists.flat()));
+}
+
 // Return lines: the faulty part can never exceed the returned quantity.
 export function returnItems(qtyMap, faultyMap) {
   return mapToItems(qtyMap).map((it) => ({

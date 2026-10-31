@@ -18,6 +18,10 @@
       "type": "integer",
       "description": "Last serial number of the collection (inclusive)"
     },
+    "tone": {
+      "type": "string",
+      "description": "Optional RGB hex color for serial number badges; older named palette keys remain supported"
+    },
     "notes": {
       "type": "string"
     }

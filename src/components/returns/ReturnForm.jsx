@@ -83,7 +83,7 @@ export default function ReturnForm({ ret, defaultStoreId, onClose }) {
       <div className="grid gap-4 sm:grid-cols-2">
         <Field
           label={t('זיכוי לחנות (₪, ריק = אוטומטי)', 'Credit to the store (ILS, empty = automatic)')}
-          hint={invoice ? t('חנות בחשבונית: זיכוי אוטומטי לפי מחיר האספקות.', 'Invoice store: automatic credit at the delivery price.') : t('חנות בקונסיגנציה: אין זיכוי כברירת מחדל.', 'Consignment store: no credit by default.')}
+          hint={invoice ? t('חנות בחשבונית: זיכוי אוטומטי לפי מחיר האספקות.', 'Invoice store: automatic credit at the delivery price.') : t('חנות בתשלום לפי מכירה: אין זיכוי כברירת מחדל.', 'Consignment store: no credit by default.')}
         >
           <Input type="number" step="0.01" dir="ltr" value={credit} placeholder={String(autoCredit)} onChange={(e) => setCredit(e.target.value)} />
         </Field>

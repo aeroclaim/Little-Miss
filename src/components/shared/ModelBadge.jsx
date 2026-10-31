@@ -9,11 +9,11 @@ export default function ModelBadge({ model, className }) {
     <span
       className={cn(
         'inline-flex items-center whitespace-nowrap rounded-full px-2.5 py-0.5 text-xs font-medium',
-        invoice ? 'bg-amber-100 text-amber-800' : 'bg-indigo-50 text-indigo-700',
+        invoice ? 'bg-amber-100 text-amber-800' : 'bg-brand/10 text-brand',
         className
       )}
     >
-      {invoice ? t('חשבונית באספקה', 'Invoice on delivery') : t('קונסיגנציה', 'Consignment')}
+      {invoice ? t('חשבונית באספקה', 'Invoice on delivery') : t('תשלום לפי מכירה', 'Consignment')}
     </span>
   );
 }

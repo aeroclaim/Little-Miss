@@ -43,7 +43,7 @@ export default function Sales() {
     <>
       <PageHeader
         title={t('דיווחי מכירות', 'Sales reports')}
-        subtitle={t('מה החנויות דיווחו שנמכר. בחנות בקונסיגנציה כל מכירה יוצרת חוב לתשלום.', 'What stores reported as sold. For consignment stores every sale creates an amount due.')}
+        subtitle={t('מה החנויות דיווחו שנמכר. בחנות בתשלום לפי מכירה כל מכירה יוצרת חוב לתשלום.', 'What stores reported as sold. For consignment stores every sale creates an amount due.')}
         actions={<Button onClick={() => setForm({})}><Plus className="h-4 w-4" />{t('דיווח חדש', 'New report')}</Button>}
       />
       <SearchInput className="mb-4 max-w-sm" value={query} onChange={setQuery} placeholder={t('חיפוש חנות או עיר...', 'Search store or town...')} />
