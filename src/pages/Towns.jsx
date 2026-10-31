@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { MapPin } from 'lucide-react';
+import { MapPin, Plus } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import { useAppData } from '@/hooks/useAppData';
 import { useLang } from '@/lib/lang';
 import { formatPercent } from '@/lib/logic/format';
@@ -9,11 +10,13 @@ import EmptyState from '@/components/shared/EmptyState';
 import LoadingBlock from '@/components/shared/LoadingBlock';
 import RateBar from '@/components/shared/RateBar';
 import TownDetailDialog from '@/components/towns/TownDetailDialog';
+import TownAssignmentsDialog from '@/components/towns/TownAssignmentsDialog';
 
 export default function Towns() {
   const { t, num, money } = useLang();
   const { model } = useAppData();
   const [selected, setSelected] = useState(null);
+  const [creating, setCreating] = useState(false);
   if (!model) return <LoadingBlock />;
 
   const sum = (key) => model.towns.reduce((total, r) => total + r[key], 0);
@@ -41,12 +44,14 @@ export default function Towns() {
       <PageHeader
         title={t('ערים', 'Towns')}
         subtitle={t('סיכום הפצה לפי עיר. לחצו על עיר כדי לראות אילו מספרים חסרים או נדירים בה.', 'Distribution summary by town. Click a town to see which numbers are missing or rare there.')}
+        actions={<Button onClick={() => setCreating(true)}><Plus className="h-4 w-4" />{t('עיר חדשה', 'Add town')}</Button>}
       />
       <DataTable
         columns={columns} rows={model.towns} totals={totals} onRowClick={setSelected} initialSort={{ key: 'delivered', dir: 'desc' }}
         empty={<EmptyState icon={MapPin} title={t('אין חנויות עדיין', 'No stores yet')} text={t('הוסיפו חנויות כדי לראות סיכום לפי עיר.', 'Add stores to see a summary by town.')} />}
       />
       {selected && <TownDetailDialog town={selected} onClose={() => setSelected(null)} />}
+      {creating && <TownAssignmentsDialog creating town="" onClose={() => setCreating(false)} />}
     </>
   );
 }

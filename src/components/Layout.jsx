@@ -2,8 +2,8 @@ import React, { useRef } from 'react';
 import { NavLink, Outlet } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import {
-  BookOpen, ClipboardList, Download, Gem, Languages, LayoutDashboard, LogOut, MapPin, Printer,
-  Settings, ShoppingBag, Store, Truck, Undo2, Wallet,
+  BookOpen, ClipboardList, Download, Gem, Languages, LayoutDashboard, LogOut, MapPin, Printer, Receipt,
+  Package, Settings, ShoppingBag, Store, Truck, Undo2, Wallet,
 } from 'lucide-react';
 import { Upload } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
@@ -23,6 +23,8 @@ const NAV = [
   { to: '/print-orders', he: 'הזמנות הדפסה', en: 'Print orders', icon: Printer },
   { to: '/stores', he: 'חנויות', en: 'Stores', icon: Store },
   { to: '/deliveries', he: 'אספקות', en: 'Deliveries', icon: Truck },
+  { to: '/packages', he: 'אריזת חבילות', en: 'Package builder', icon: Package },
+  { to: '/expenses', he: 'הוצאות', en: 'Expenses', icon: Receipt },
   { to: '/sales', he: 'דיווחי מכירות', en: 'Sales reports', icon: ShoppingBag },
   { to: '/returns', he: 'החזרות', en: 'Returns', icon: Undo2 },
   { to: '/payments', he: 'תשלומים', en: 'Payments', icon: Wallet },
@@ -65,13 +67,9 @@ export default function Layout() {
       <WelcomeGate>
         <div className="min-h-screen bg-wash md:flex">
           <aside className="bg-sidebar text-sidebar-foreground md:sticky md:top-0 md:flex md:h-screen md:w-60 md:shrink-0 md:flex-col">
-            <div className="flex items-center gap-3 px-5 py-4">
-              {isDesktop ? (
-                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-card font-display text-sm font-bold text-foreground">LM</span>
-              ) : (
-                <Image src={LOGO_URL} alt="Little Miss" fittingType="fit" className="h-9 w-9 shrink-0 rounded-lg bg-card" />
-              )}
-              <span className="font-display text-lg font-bold text-sidebar-accent-foreground">Little Miss</span>
+            <div className="flex items-center gap-3 border-b border-sidebar-border px-5 py-5">
+              <Image src={LOGO_URL} alt="Little Miss" fittingType="fit" className="h-10 w-10 shrink-0 rounded-xl bg-card object-cover" />
+              <span className="font-display text-lg font-bold tracking-tight text-foreground">Little Miss</span>
             </div>
             <nav className="flex gap-1 overflow-x-auto px-3 pb-3 md:flex-1 md:flex-col md:overflow-y-auto md:overflow-x-visible">
               {NAV.map(({ to, he, en, icon: Icon }) => (
@@ -80,7 +78,7 @@ export default function Layout() {
                   to={to}
                   end={to === '/'}
                   className={({ isActive }) =>
-                    cn('flex shrink-0 items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors hover:bg-sidebar-accent', isActive && 'bg-sidebar-primary text-sidebar-primary-foreground hover:bg-sidebar-primary')
+                    cn('flex shrink-0 items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground', isActive && 'bg-sidebar-accent text-sidebar-accent-foreground')
                   }
                 >
                   <Icon className="h-4 w-4" />
@@ -112,8 +110,8 @@ export default function Layout() {
               </Button>}
             </div>
           </aside>
-          <main className="min-w-0 flex-1 p-4 sm:p-8">
-            <div className="mx-auto max-w-6xl">
+          <main className="min-w-0 flex-1 p-4 sm:px-8 sm:py-7">
+            <div className="mx-auto max-w-7xl">
               <Outlet />
             </div>
           </main>

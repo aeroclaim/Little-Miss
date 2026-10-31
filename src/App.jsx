@@ -25,6 +25,8 @@ import Returns from '@/pages/Returns';
 import Payments from '@/pages/Payments';
 import Preorders from '@/pages/Preorders';
 import Towns from '@/pages/Towns';
+import Packages from '@/pages/Packages';
+import Expenses from '@/pages/Expenses';
 import Rarity from '@/pages/Rarity';
 import Settings from '@/pages/Settings';
 import { isDesktop } from '@/lib/runtime';
@@ -72,6 +74,8 @@ const AuthenticatedApp = () => {
           <Route path="/payments" element={<Payments />} />
           <Route path="/preorders" element={<Preorders />} />
           <Route path="/towns" element={<Towns />} />
+          <Route path="/packages" element={<Packages />} />
+          <Route path="/expenses" element={<Expenses />} />
           <Route path="/rarity" element={<Rarity />} />
           <Route path="/settings" element={<Settings />} />
         </Route>

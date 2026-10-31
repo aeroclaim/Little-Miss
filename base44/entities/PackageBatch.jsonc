@@ -1,0 +1,30 @@
+{
+  "name": "PackageBatch",
+  "type": "object",
+  "properties": {
+    "batch_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "town_counts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "town": { "type": "string" },
+          "count": { "type": "integer" }
+        },
+        "required": ["town", "count"]
+      }
+    },
+    "label_rows": {
+      "type": "integer",
+      "default": 8
+    },
+    "label_columns": {
+      "type": "integer",
+      "default": 3
+    }
+  },
+  "required": ["batch_date", "town_counts"]
+}

@@ -1,0 +1,14 @@
+{
+  "name": "Expense",
+  "type": "object",
+  "properties": {
+    "expense_date": { "type": "string", "format": "date" },
+    "amount": { "type": "number", "description": "Expense amount in ILS" },
+    "category": { "type": "string" },
+    "description": { "type": "string" },
+    "vendor": { "type": "string" },
+    "receipt_file": { "type": "string" },
+    "notes": { "type": "string" }
+  },
+  "required": ["expense_date", "amount", "category", "description"]
+}

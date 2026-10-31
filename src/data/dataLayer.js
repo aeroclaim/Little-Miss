@@ -25,12 +25,16 @@ const ENTITIES = {
   products: 'Product',
   printOrders: 'PrintOrder',
   stores: 'Store',
+  towns: 'Town',
   priceTiers: 'PriceTier',
   deliveries: 'Delivery',
   sales: 'StoreSale',
   payments: 'StorePayment',
   returns: 'StoreReturn',
   preorders: 'Preorder',
+  packageBatches: 'PackageBatch',
+  packages: 'Package',
+  expenses: 'Expense',
 };
 const SETTINGS_ENTITY = 'AppSetting';
 const PAGE_SIZE = 1000;
@@ -112,24 +116,54 @@ export const dataLayer = {
     return res.signed_url;
   },
 
+  async resolveFileAsset(fileRef, expiresIn = 3600) {
+    if (window.littlemissDesktop) {
+      let stored;
+      if (String(fileRef).startsWith('local-file:')) {
+        stored = await window.littlemissDesktop.readFile(fileRef);
+      } else {
+        const path = localFilePath(fileRef);
+        if (path) stored = await window.littlemissDesktop.readFilePath(path);
+      }
+      if (stored) {
+        return {
+          url: URL.createObjectURL(new Blob([stored.bytes], { type: stored.type })),
+          type: stored.type,
+        };
+      }
+      if (!/^https?:\/\//i.test(String(fileRef))) throw new Error('Unsupported file reference');
+      return { url: String(fileRef), type: fileTypeFromReference(fileRef) };
+    }
+    if (/^https?:\/\//i.test(String(fileRef))) {
+      return { url: String(fileRef), type: fileTypeFromReference(fileRef) };
+    }
+    const res = await base44.integrations.Core.CreateFileSignedUrl({ file_uri: fileRef, expires_in: expiresIn });
+    return { url: res.signed_url, type: fileTypeFromReference(fileRef) };
+  },
+
   async exportBackup() {
     const [tables, settings] = await Promise.all([this.loadAll(), this.loadSettings()]);
     const files = [];
-    const videoSetting = settings.find((setting) => setting.key === 'welcome_video_ref');
-    if (videoSetting?.value) {
+    const fileRefs = new Set([
+      ...settings.map((setting) => setting.value),
+      ...(tables.products || []).map((product) => product.file_link),
+      ...(tables.expenses || []).map((expense) => expense.receipt_file),
+    ].filter((value) => String(value || '').startsWith('local-file:')));
+    for (const fileRef of fileRefs) {
       let blob;
-      let name = 'welcome-video';
+      let name = String(fileRef).split(':').pop();
       if (window.littlemissDesktop) {
-        const stored = await window.littlemissDesktop.readFile(videoSetting.value);
+        const stored = await window.littlemissDesktop.readFile(fileRef);
         blob = new Blob([stored.bytes], { type: stored.type });
+        name = stored.name || name;
       } else {
-        const signed = await base44.integrations.Core.CreateFileSignedUrl({ file_uri: videoSetting.value, expires_in: 3600 });
+        const signed = await base44.integrations.Core.CreateFileSignedUrl({ file_uri: fileRef, expires_in: 3600 });
         const response = await fetch(signed.signed_url);
-        if (!response.ok) throw new Error('Could not download the welcome video for backup');
+        if (!response.ok) throw new Error(`Could not download ${fileRef} for backup`);
         blob = await response.blob();
-        name = videoSetting.value.split('/').pop() || name;
+        name = String(fileRef).split('/').pop() || name;
       }
-      files.push({ ref: videoSetting.value, name, type: blob.type, data: await toBase64(blob) });
+      files.push({ ref: fileRef, name, type: blob.type, data: await toBase64(blob) });
     }
     return { version: 1, exportedAt: new Date().toISOString(), ...tables, settings, files };
   },
@@ -139,3 +173,33 @@ export const dataLayer = {
     return window.littlemissDesktop.importBackup(backup);
   },
 };
+
+function localFilePath(fileRef) {
+  const value = String(fileRef || '');
+  if (/^[a-z]:[\\/]/i.test(value) || /^\\\\/.test(value)) return value;
+  if (!/^file:\/\//i.test(value)) return null;
+  try {
+    const url = new URL(value);
+    const pathname = decodeURIComponent(url.pathname);
+    if (url.hostname) return `\\\\${url.hostname}${pathname.replace(/\//g, '\\')}`;
+    return pathname.replace(/^\/([a-z]:)/i, '$1').replace(/\//g, '\\');
+  } catch {
+    return null;
+  }
+}
+
+function fileTypeFromReference(fileRef) {
+  const path = String(fileRef || '').split(/[?#]/, 1)[0].toLowerCase();
+  if (/\.pdf$/.test(path)) return 'application/pdf';
+  const imageTypes = {
+    '.avif': 'image/avif',
+    '.bmp': 'image/bmp',
+    '.gif': 'image/gif',
+    '.jpeg': 'image/jpeg',
+    '.jpg': 'image/jpeg',
+    '.png': 'image/png',
+    '.svg': 'image/svg+xml',
+    '.webp': 'image/webp',
+  };
+  return imageTypes[Object.keys(imageTypes).find((extension) => path.endsWith(extension))] || '';
+}

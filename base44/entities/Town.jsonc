@@ -1,0 +1,21 @@
+{
+  "name": "Town",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Permanently saved town name"
+    },
+    "assigned_serials": {
+      "type": "array",
+      "items": {
+        "type": "integer"
+      },
+      "description": "Serial numbers assigned to this town"
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": ["name"]
+}

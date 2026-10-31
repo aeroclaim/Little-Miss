@@ -1,0 +1,29 @@
+{
+  "name": "Package",
+  "type": "object",
+  "properties": {
+    "batch_id": { "type": "string" },
+    "package_number": { "type": "integer" },
+    "town": { "type": "string" },
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "serial_number": { "type": "integer" },
+          "quantity": { "type": "integer" }
+        },
+        "required": ["serial_number", "quantity"]
+      }
+    },
+    "total_units": { "type": "integer" },
+    "status": {
+      "type": "string",
+      "enum": ["draft", "ready", "delivered", "cancelled"],
+      "default": "draft"
+    },
+    "store_id": { "type": "string" },
+    "delivery_id": { "type": "string" }
+  },
+  "required": ["batch_id", "package_number", "town", "items", "status"]
+}

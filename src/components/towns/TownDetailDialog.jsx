@@ -1,10 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { Pencil } from 'lucide-react';
 import { useAppData } from '@/hooks/useAppData';
 import { useLang } from '@/lib/lang';
 import SerialBadge from '@/components/shared/SerialBadge';
 import LevelBadge from '@/components/shared/LevelBadge';
+import TownAssignmentsDialog from '@/components/towns/TownAssignmentsDialog';
 
 // Missing numbers come first: they are the ones worth delivering to this town.
 const GROUPS = ['absent', 'very_rare', 'rare', 'common', 'abundant'];
@@ -12,6 +15,7 @@ const GROUPS = ['absent', 'very_rare', 'rare', 'common', 'abundant'];
 export default function TownDetailDialog({ town, onClose }) {
   const { t, num, money } = useLang();
   const { model } = useAppData();
+  const [editing, setEditing] = useState(false);
   const table = model.rarity.byTown[town.town];
   const stores = town.storeIds.map((id) => model.storeById[id]).filter(Boolean);
   const stats = [
@@ -27,7 +31,10 @@ export default function TownDetailDialog({ town, onClose }) {
     <Dialog open onOpenChange={(open) => { if (!open) onClose(); }}>
       <DialogContent className="max-h-[92vh] w-[calc(100vw-1.5rem)] max-w-3xl gap-5 overflow-y-auto rounded-2xl sm:rounded-2xl">
         <DialogHeader className="text-start sm:text-start">
-          <DialogTitle className="font-display text-2xl font-bold">{town.town}</DialogTitle>
+          <div className="flex items-center justify-between gap-3">
+            <DialogTitle className="font-display text-2xl font-bold">{town.town}</DialogTitle>
+            <Button type="button" variant="outline" size="sm" onClick={() => setEditing(true)}><Pencil className="h-4 w-4" />{t('מספרים והערות', 'Numbers & notes')}</Button>
+          </div>
           <DialogDescription>
             {t(`כיסוי של ${town.coveredCount} מתוך ${table.rows.length} מספרים שהודפסו`, `Covers ${town.coveredCount} of ${table.rows.length} printed numbers`)}
           </DialogDescription>
@@ -61,6 +68,9 @@ export default function TownDetailDialog({ town, onClose }) {
           );
         })}
         <div>
+          {!!model.townByName[town.town]?.notes && (
+            <p className="mb-3 rounded-xl bg-muted/50 p-3 text-sm text-muted-foreground">{model.townByName[town.town].notes}</p>
+          )}
           <p className="mb-2 text-sm font-medium">{t('חנויות בעיר', 'Stores in this town')}</p>
           <div className="flex flex-wrap gap-2">
             {stores.map((s) => (
@@ -69,6 +79,7 @@ export default function TownDetailDialog({ town, onClose }) {
           </div>
         </div>
       </DialogContent>
+      {editing && <TownAssignmentsDialog town={town.town} onClose={() => setEditing(false)} />}
     </Dialog>
   );
 }

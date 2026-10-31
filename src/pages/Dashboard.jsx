@@ -1,5 +1,5 @@
 import React from 'react';
-import { Boxes, Package, Store, Wallet } from 'lucide-react';
+import { Boxes, Package, Receipt, Store, Wallet } from 'lucide-react';
 import { useAppData } from '@/hooks/useAppData';
 import { useLang } from '@/lib/lang';
 import PageHeader from '@/components/shared/PageHeader';
@@ -29,12 +29,15 @@ export default function Dashboard() {
   return (
     <>
       <PageHeader title={t('לוח בקרה', 'Dashboard')} subtitle={t('מצב ההפצה של אוסף ליטל מיס', 'Distribution status of the Little Miss collection')} />
-      <div className="mb-6 grid grid-cols-2 gap-4 lg:grid-cols-4">
+      <div className="mb-6 grid grid-cols-2 gap-4 lg:grid-cols-3 xl:grid-cols-6">
         <StatCard label={t('הודפסו', 'Printed')} value={num(tot.printed)} icon={Package} />
         <StatCard label={t('מלאי פנוי', 'Free stock')} value={num(tot.available)} icon={Boxes} tone="mint" />
         <StatCard label={t('בחנויות', 'In stores')} value={num(tot.delivered - tot.returned)} icon={Store} tone="rose" />
         <StatCard label={t('חוב חנויות', 'Owed by stores')} value={money(tot.receivable, 0)} icon={Wallet} tone="amber" />
+        <StatCard label={t('הוצאות רשומות', 'Recorded expenses')} value={money(tot.totalExpenses, 0)} icon={Receipt} tone="rose" />
+        <StatCard label={t('חיובים פחות הוצאות', 'Charges less expenses')} value={money(tot.afterTrackedExpenses, 0)} icon={Wallet} />
       </div>
+      <p className="-mt-3 mb-5 text-xs text-muted-foreground">{t('הסכום כולל רק חיובים ורווחי מכירה רשומים פחות הוצאות הדפסה והוצאות ידניות; אינו כולל עלויות שלא נרשמו.', 'This is recorded charges and sales less print and manual expenses; unrecorded costs are not included.')}</p>
       <Section title={t('מלאי לפי מספר', 'Stock by number')} bodyClassName="p-0">
         <DataTable columns={columns} rows={rows} className="border-0 shadow-none" empty={<p className="p-8 text-center text-sm text-muted-foreground">{t('עדיין לא הודפס מלאי.', 'Nothing printed yet.')}</p>} />
       </Section>
